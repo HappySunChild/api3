@@ -114,4 +114,4 @@ return createClass {
 			return robux.robux
 		end,
 	},
-}
+} :: (client: types.Client) -> types.UsersProvider
