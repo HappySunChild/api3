@@ -15,9 +15,7 @@ type data = {
 }
 
 return createClass {
-	super = function(client: types.Client, data: data)
-		return PartialUser(client, data)
-	end,
+	super = PartialUser,
 	constructor = function(self: Self, _, data: data)
 		self.description = data.description
 	end,
