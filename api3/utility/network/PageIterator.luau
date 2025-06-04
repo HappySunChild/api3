@@ -1,8 +1,8 @@
 local types = require "@package/types"
 
+local createClass = require "@utility/createClass"
 local merge = require "@utility/merge"
 
-type map<T> = (any) -> T
 type Self<T> = types.PageIterator<T> & {
 	_fetcher: types.Fetcher,
 	_url: string,
@@ -15,80 +15,70 @@ type Self<T> = types.PageIterator<T> & {
 	_nextCursor: string?,
 	_prevCursor: string?,
 }
-
-local class = {}
-local METATABLE = table.freeze {
-	__index = class,
-	__tostring = function(self)
-		return `<PageIterator>`
-	end,
+type map<T> = (any) -> T
+type options<T> = {
+	url: string,
+	sortOrder: string?,
+	limit: number?,
+	query: { [string]: any }?,
+	map: map<T>?,
 }
 
-local function PageIterator<T>(
-	fetcher: types.Fetcher,
-	options: {
-		url: string,
-		sortOrder: string?,
-		limit: number?,
-		query: { [string]: any }?,
-		map: map<any>?,
-	}
-): types.PageIterator<T>
-	local newIterator: Self<T> = setmetatable({
-		_fetcher = fetcher,
-		_url = options.url,
-		_limit = options.limit or 10,
-		_sortOrder = options.sortOrder,
-		_query = options.query,
-		_map = options.map,
+return createClass {
+	constructor = function<T>(self: Self<T>, fetcher: types.Fetcher, options: options<T>)
+		self._fetcher = fetcher
+		self._url = options.url
+		self._limit = options.limit or 10
+		self._sortOrder = options.sortOrder
+		self._query = options.query
+		self._map = options.map
+		self._currentCursor = nil
+		self._nextCursor = nil
+		self._prevCursor = nil
+	end,
+	attributes = {
+		isFinished = function<T>(self: Self<T>)
+			return self._nextCursor == nil
+		end,
+		getCurrentPage = function<T>(self: Self<T>)
+			local pageData = self._fetcher:get(
+				self._url,
+				merge({
+					cursor = self._currentCursor,
+					limit = self._limit,
+					sortOrder = self._sortOrder,
+				}, self._query)
+			)
 
-		_currentCursor = nil,
-		_nextCursor = nil,
-		_prevCursor = nil,
-	}, METATABLE) :: any
+			self._nextCursor = pageData.nextPageCursor
+			self._prevCursor = pageData.previousPageCursor
 
-	return newIterator
-end
+			local data = pageData.data
+			local map = self._map
 
-function class.isFinished<T>(self: Self<T>)
-	return self._nextCursor == nil
-end
+			if map then
+				for key, value in data do
+					data[key] = map(value)
+				end
+			end
 
-function class.getCurrentPage<T>(self: Self<T>)
-	local pageData = self._fetcher:get(
-		self._url,
-		merge({
-			cursor = self._currentCursor,
-			limit = self._limit,
-			sortOrder = self._sortOrder,
-		}, self._query)
-	)
+			return data
+		end,
+		advanceToNextPage = function<T>(self: Self<T>): boolean
+			if self._nextCursor == nil then
+				return false
+			end
 
-	self._nextCursor = pageData.nextPageCursor
-	self._prevCursor = pageData.previousPageCursor
+			self._prevCursor = self._currentCursor
+			self._currentCursor = self._nextCursor
+			self._nextCursor = nil :: any -- proof that casting everything to `any` fixes everything
 
-	local data = pageData.data
-	local map = self._map
-
-	if map then
-		for key, value in data do
-			data[key] = map(value)
-		end
-	end
-
-	return data
-end
-
-function class.advanceToNextPage<T>(self: Self<T>): boolean
-	if self._nextCursor == nil then
-		return false
-	end
-
-	self._prevCursor = self._currentCursor
-	self._currentCursor = self._nextCursor
-	self._nextCursor = nil :: any -- proof that casting everything to `any` fixes everything
-
-	return true
-end
-
-return PageIterator
+			return true
+		end,
+	},
+	metatable = table.freeze {
+		__tostring = function()
+			return "<PageIterator>"
+		end,
+	},
+} :: <T>(fetcher: types.Fetcher, options: options<T>) -> types.PageIterator<T>
