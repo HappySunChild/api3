@@ -77,5 +77,8 @@ return createClass {
 		post = function(self: Self, url: string, payload: any?): (any, net.FetchResponse)
 			return self:request(url, "POST", payload)
 		end,
+		patch = function(self: Self, url: string, payload: any?): (any, net.FetchResponse)
+			return self:request(url, "PATCH", payload)
+		end,
 	},
 } :: () -> types.Fetcher
