@@ -39,8 +39,13 @@ export type BaseUser = {
 }
 
 export type User = BaseUser & {
+export type PartialUser = BaseUser & {
 	name: string,
 	displayName: string,
+	hasVerifiedBadge: boolean,
+}
+
+export type User = PartialUser & {
 	description: string,
 }
 
