@@ -81,4 +81,4 @@ return createClass {
 			return "<PageIterator>"
 		end,
 	},
-} :: <T>(fetcher: types.Fetcher, options: options<T>) -> types.PageIterator<T>
+} :: (fetcher: types.Fetcher, options: options<unknown>) -> types.PageIterator<unknown>

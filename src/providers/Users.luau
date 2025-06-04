@@ -7,6 +7,7 @@ local getUrl = require "@utility/network/getUrl"
 
 local AuthenticatedUser = require "@classes/Users/AuthenticatedUser"
 local BaseUser = require "@classes/Users/BaseUser"
+local PartialUser = require "@classes/Users/PartialUser"
 local User = require "@classes/Users/User"
 
 type Self = types.UsersProvider & {
@@ -33,6 +34,53 @@ return createClass {
 			local userData = client._fetcher:get(getUrl("users", "v1/users/authenticated"))
 
 			return AuthenticatedUser(client, userData)
+		end,
+		getUserFromUsername = function(self: Self, username: string): types.PartialUser
+			return self:getUsersFromUsernames({ username })[1]
+		end,
+		getUsersFromUsernames = function(self: Self, usernames: { string }): { types.PartialUser }
+			local client = self._client
+			local userData = client._fetcher:post(getUrl("users", "v1/usernames/users"), {
+				usernames = usernames,
+				excluseBannedUsers = false,
+			})
+
+			local users = {}
+
+			for _, data in userData.data do
+				table.insert(users, PartialUser(client, data))
+			end
+
+			return users
+		end,
+		getUsersFromIds = function(self: Self, userIds: { number }): { types.PartialUser }
+			local client = self._client
+			local userData = client._fetcher:post(getUrl("users", "v1/users"), {
+				userIds = userIds,
+				excluseBannedUsers = false,
+			})
+
+			local users = {}
+
+			for _, data in userData.data do
+				table.insert(users, PartialUser(client, data))
+			end
+
+			return users
+		end,
+		searchUsersWithKeyword = function(self: Self, keyword: string, limit: number, sessionId: string?)
+			local client = self._client
+			return PageIterator(client._fetcher, {
+				url = getUrl("users", "v1/users/search"),
+				limit = limit,
+				query = {
+					keyword = keyword,
+					sessionId = sessionId,
+				},
+				map = function(data: any)
+					return PartialUser(client, data)
+				end,
+			})
 		end,
 		-- user api methods
 		getUserUsernameHistory = function(self: Self, userId: number, limit: number)

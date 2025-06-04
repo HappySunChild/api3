@@ -38,7 +38,6 @@ export type BaseUser = {
 	getUsernameHistory: (BaseUser, limit: number) -> PageIterator<string>
 }
 
-export type User = BaseUser & {
 export type PartialUser = BaseUser & {
 	name: string,
 	displayName: string,
@@ -64,6 +63,10 @@ export type UsersProvider = {
 	getBaseUser: (UsersProvider, userId: number) -> BaseUser,
 	getUser: (UsersProvider, userId: number) -> User,
 	getAuthenticatedUser: (UsersProvider) -> AuthenticatedUser,
+	getUserFromUsername: (UsersProvider, username: string) -> PartialUser?,
+	getUsersFromUsernames: (UsersProvider, usernames: { string }) -> { PartialUser },
+	getUsersFromIds: (UsersProvider, userIds: { number }) -> { PartialUser },
+	searchUsersWithKeyword: (UsersProvider, keyword: string, limit: number, sessionId: string?) -> PageIterator<PartialUser>,
 	
 	getUserUsernameHistory: (UsersProvider, userId: number, limit: number) -> PageIterator<string>,
 	
