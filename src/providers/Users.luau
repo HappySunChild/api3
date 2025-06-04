@@ -45,7 +45,7 @@ return createClass {
 			})
 		end,
 		-- authentication api methods
-		_getAuthenticatedBirthday = function(self: Self)
+		_getAuthenticatedBirthdate = function(self: Self)
 			local birthday = self._client._fetcher:get(getUrl("users", "v1/birthdate"))
 			return birthday
 		end,

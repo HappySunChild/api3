@@ -63,7 +63,7 @@ export type UsersProvider = {
 	getUserUsernameHistory: (UsersProvider, userId: number, limit: number) -> PageIterator<string>,
 	
 	_getAuthenticatedGender: (UsersProvider) -> number,
-	_getAuthenticatedBirthday: (UsersProvider) -> UserBirthdate,
+	_getAuthenticatedBirthdate: (UsersProvider) -> UserBirthdate,
 	_getAuthenticatedAgeBracket: (UsersProvider) -> number,
 	_getAuthenticatedCountryCode: (UsersProvider) -> string,
 	_getAuthenticatedRobux: (UsersProvider) -> number

@@ -23,8 +23,8 @@ return createClass {
 		self.displayName = data.displayName
 	end,
 	attributes = {
-		getBirthday = function(self: Self)
-			return self._client.users:_getAuthenticatedBirthday()
+		getBirthdate = function(self: Self)
+			return self._client.users:_getAuthenticatedBirthdate()
 		end,
 		getGender = function(self: Self)
 			return self._client.users:_getAuthenticatedGender()
