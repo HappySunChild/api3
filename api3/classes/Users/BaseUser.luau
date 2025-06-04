@@ -1,0 +1,31 @@
+local types = require "@package/types"
+
+local createClass = require "@utility/createClass"
+local tint = require "@utility/tint"
+
+type Self = types.BaseUser & {
+	_client: types.Client,
+}
+
+return createClass {
+	constructor = function(self: Self, client: types.Client, userId: number)
+		self._client = client
+		self.id = userId
+	end,
+	attributes = {
+		getLink = function(self: Self): string
+			return `https://www.roblox.com/users/{self.id}/profile`
+		end,
+		getFriends = function(self: Self): { types.Friend }
+			return self._client.friends:getUserFriends(self.id)
+		end,
+		getPresence = function(self: Self): types.Presence
+			return self._client.presence:getUserPresences({ self.id })[1]
+		end,
+	},
+	metatable = table.freeze {
+		__tostring = function(self: Self)
+			return tint(`<BaseUser {self.id}>`, "purple")
+		end,
+	},
+} :: (client: types.Client, userId: number) -> types.BaseUser

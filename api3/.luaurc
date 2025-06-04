@@ -1,0 +1,8 @@
+{
+	"aliases": {
+		"providers": "providers",
+		"utility": "utility",
+		"classes": "classes",
+		"package": "."
+	}
+}

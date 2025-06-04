@@ -1,2 +1,2 @@
 # api3
-A Luau-Lune library for interfacing with Roblox's API
+A [Luau](https://luau.org/)-[Lune](https://github.com/lune-org/lune) library for interfacing with Roblox's API.

@@ -1,0 +1,8 @@
+return {
+	Completed = "Completed",
+	InReview = "InReview",
+	Pending = "Pending",
+	Error = "Error",
+	Moderated = "Moderated",
+	Blocked = "Blocked",
+}
