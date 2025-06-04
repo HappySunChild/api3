@@ -5,6 +5,7 @@ local createClass = require "@utility/createClass"
 local Fetcher = require "@utility/network/Fetcher"
 
 local FriendsProvider = require "@providers/Friends"
+local GroupsProvider = require "@providers/Groups"
 local PlacesProvider = require "@providers/Places"
 local PresenceProvider = require "@providers/Presence"
 local ThumbnailProvider = require "@providers/Thumbnails"
@@ -21,6 +22,7 @@ return createClass {
 		self.thumbnails = ThumbnailProvider(self)
 		self.places = PlacesProvider(self)
 		self.friends = FriendsProvider(self)
+		self.groups = GroupsProvider(self)
 
 		self:setToken(token)
 	end,

@@ -205,6 +205,127 @@ export type PlacesProvider = {
 	getPlaces: (PlacesProvider, placeIds: { number }) -> { Place },
 }
 
+-- Groups
+
+export type GroupRelationshipType = "enemies" | "allies"
+export type GroupActionType = keyof<typeof(require "@package/enums/GroupActionType")>
+export type GroupMessage = {
+	id: number?,
+	body: string,
+	poster: PartialUser?,
+}
+export type GroupAuditLog = {
+	actor: GroupMember,
+	actionType: string,
+	description: any,
+}
+export type GroupPayout = {
+	user: PartialUser,
+	percentage: number,
+}
+export type GroupRole = {
+	id: number,
+	name: string,
+	description: string,
+	rank: number,
+	memberCount: number,
+}
+export type GroupMember = {
+	user: PartialUser,
+	role: { id: number, name: string, rank: number },
+}
+export type GroupJoinRequest = {
+	requester: PartialUser,
+}
+export type SocialLink = {
+	id: number,
+	type: string,
+	url: string,
+	title: string,
+}
+type GroupPayoutRestrictions = {
+	canUseRecurringPayout: boolean,
+	canUseOneTimePayout: boolean,
+}
+type GroupSettings = {
+	isApprovalRequired: boolean,
+	areEnemiesAllowed: boolean,
+	areGroupFundsVisible: boolean,
+	areGroupGamesVisible: boolean,
+	isGroupNameChangeEnabled: boolean,
+}
+
+export type BaseGroup = {
+	id: number,
+
+	getRoles: (BaseGroup) -> { GroupRole },
+	getMembers: (BaseGroup, limit: number) -> PageIterator<GroupMember>,
+	getMembersWithRole: (BaseGroup, roleId: number, limit: number) -> PageIterator<PartialUser>,
+
+	getRelationships: (BaseGroup, relationshipType: GroupRelationshipType, limit: number) -> { Group },
+	getSocialLinks: (BaseGroup) -> { SocialLink },
+
+	getGroupWall: (BaseGroup, limit: number) -> PageIterator<GroupMessage>,
+
+	getAuditLog: (
+		BaseGroup,
+		actionType: GroupActionType,
+		limit: number,
+		userId: number?
+	) -> PageIterator<GroupAuditLog>,
+	getSettings: (BaseGroup) -> GroupSettings,
+	getJoinRequestWithUserId: (BaseGroup, userId: number) -> GroupJoinRequest,
+	getJoinRequests: (BaseGroup, limit: number) -> PageIterator<GroupJoinRequest>,
+	getPayoutRestrictions: (BaseGroup) -> GroupPayoutRestrictions,
+	getPayouts: (BaseGroup) -> { GroupPayout },
+
+	getNameHistory: (BaseGroup, limit: number) -> PageIterator<string>,
+}
+export type Group = BaseGroup & {
+	name: string,
+	description: string,
+	memberCount: number,
+	hasVerifiedBadge: boolean,
+	publicEntryAllowed: boolean,
+	isLocked: boolean?,
+
+	owner: PartialUser,
+	shout: GroupMessage?,
+}
+export type GroupsProvider = {
+	getBaseGroup: (GroupsProvider, groupId: number) -> BaseGroup,
+	getGroup: (GroupsProvider, groupId: number) -> Group,
+	-- user/roles
+	getRoles: (GroupsProvider, groupId: number) -> { GroupRole },
+	getMembers: (GroupsProvider, groupId: number, limit: number) -> PageIterator<GroupMember>,
+	getMembersWithRole: (GroupsProvider, groupId: number, roleId: number, limit: number) -> PageIterator<PartialUser>,
+	-- socials
+	getRelationships: (
+		GroupsProvider,
+		groupId: number,
+		relationType: GroupRelationshipType,
+		limit: number
+	) -> { Group },
+	getSocialLinks: (GroupsProvider, groupId: number) -> { SocialLink },
+	-- group wall
+	getGroupWall: (GroupsProvider, groupId: number, limit: number) -> PageIterator<GroupMessage>,
+	-- admin
+	getAuditLog: (
+		GroupsProvider,
+		groupId: number,
+		actionType: GroupActionType,
+		limit: number,
+		userId: number?
+	) -> PageIterator<GroupAuditLog>,
+	getSettings: (GroupsProvider, groupId: number) -> GroupSettings,
+	getJoinRequestWithUserId: (GroupsProvider, groupId: number, userId: number) -> GroupJoinRequest?,
+	getJoinRequests: (GroupsProvider, groupId: number, limit: number) -> PageIterator<GroupJoinRequest>,
+	getPayoutRestrictions: (GroupsProvider, groupId: number) -> GroupPayoutRestrictions,
+	getPayouts: (GroupsProvider, groupId: number) -> { GroupPayout },
+	-- misc
+	getNameHistory: (GroupsProvider, groupId: number, limit: number) -> PageIterator<string>,
+}
+
 -- Client
 
 export type Client = {
@@ -217,13 +338,14 @@ export type Client = {
 	friends: FriendsProvider,
 	presence: PresenceProvider,
 	places: PlacesProvider,
+	groups: GroupsProvider,
 
 	setToken: (Client, token: string) -> (),
 
 	getBaseUser: (Client, userId: number) -> BaseUser,
 	getUser: (Client, userId: number) -> User,
 	getAuthenticatedUser: (Client) -> AuthenticatedUser,
-	
+
 	getBasePlace: (Client, placeId: number) -> BasePlace,
 	getPlace: (Client, placeId: number) -> Place,
 }
