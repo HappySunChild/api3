@@ -22,7 +22,7 @@ return createClass {
 	end,
 	metatable = table.freeze {
 		__tostring = function(self: Self)
-			return tint(`<Thumbnail {self.state}:{self.imageUrl}>`, "purple")
+			return tint(`<Thumbnail {self.state}:{self.imageUrl}>`, "yellow")
 		end,
 	},
 } :: (data: data) -> types.Thumbnail

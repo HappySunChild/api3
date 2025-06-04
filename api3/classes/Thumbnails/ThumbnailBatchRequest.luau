@@ -40,7 +40,7 @@ return createClass {
 	},
 	metatable = table.freeze {
 		__tostring = function(self: Self)
-			return tint(`<ThumbnailBatchRequest {self.token}>`, "purple")
+			return tint(`<ThumbnailBatchRequest {self.token}>`, "yellow")
 		end,
 	},
 } :: (options: options) -> types.ThumbnailBatchRequest

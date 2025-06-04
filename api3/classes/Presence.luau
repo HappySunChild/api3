@@ -2,6 +2,7 @@ local types = require "@package/types"
 
 local createClass = require "@utility/createClass"
 local generateJoinLink = require "@utility/generateJoinLink"
+local tint = require "@utility/tint"
 
 type Self = types.Presence
 type data = {
@@ -40,7 +41,7 @@ return createClass {
 	},
 	metatable = table.freeze {
 		__tostring = function(self: Self)
-			return `<Presence {self.lastLocation}>`
+			return tint(`<Presence {self.lastLocation}>`, "yellow")
 		end,
 	},
 } :: ({}, data: data) -> types.Presence
