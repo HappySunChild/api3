@@ -22,6 +22,9 @@ return createClass {
 		getPresence = function(self: Self): types.Presence
 			return self._client.presence:getUserPresences({ self.id })[1]
 		end,
+		getUsernameHistory = function(self: Self, limit: number)
+			return self._client.users:getUserUsernameHistory(self.id, limit)
+		end,
 	},
 	metatable = table.freeze {
 		__tostring = function(self: Self)
