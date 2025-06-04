@@ -56,9 +56,9 @@ return createClass {
 			local data = pageData.data
 			local map = self._map
 
-			if map then
+			if map and data ~= nil then
 				for key, value in data do
-					data[key] = map(value)
+					(data :: any)[key] = map(value)
 				end
 			end
 
