@@ -348,6 +348,9 @@ export type Client = {
 
 	getBasePlace: (Client, placeId: number) -> BasePlace,
 	getPlace: (Client, placeId: number) -> Place,
+
+	getBaseGroup: (Client, groupId: number) -> BaseGroup,
+	getGroup: (Client, groupId: number) -> Group,
 }
 
 return nil

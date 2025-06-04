@@ -46,6 +46,12 @@ return createClass {
 		getPlace = function(self: Self, placeId: number): types.Place
 			return self.places:getPlace(placeId)
 		end,
+		getBaseGroup = function(self: Self, groupId: number): types.BaseGroup
+			return self.groups:getBaseGroup(groupId)
+		end,
+		getGroup = function(self: Self, groupId: number): types.Group
+			return self.groups:getGroup(groupId)
+		end,
 	},
 	metatable = table.freeze {
 		__tostring = function()
