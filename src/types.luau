@@ -9,12 +9,12 @@ export type Fetcher = {
 		url: string,
 		method: net.HttpMethod,
 		payload: any?,
-		query: {[string]: any}?
+		query: { [string]: any }?
 	) -> (any, net.FetchResponse),
-	get: (Fetcher, url: string, query: {[string]: any}?) -> (any, net.FetchResponse),
+	get: (Fetcher, url: string, query: { [string]: any }?) -> (any, net.FetchResponse),
 	post: (Fetcher, url: string, payload: any?) -> (any, net.FetchResponse),
+	patch: (Fetcher, url: string, payload: any?) -> (any, net.FetchResponse),
 }
-
 export type PageIterator<T> = {
 	isFinished: (PageIterator<T>) -> boolean,
 	getCurrentPage: (PageIterator<T>) -> { T },
@@ -26,7 +26,7 @@ export type PageIterator<T> = {
 type UserBirthdate = {
 	birthDay: number,
 	birthMonth: number,
-	birthYear: number
+	birthYear: number,
 }
 
 export type BaseUser = {
@@ -35,30 +35,26 @@ export type BaseUser = {
 	getLink: (BaseUser) -> string,
 	getFriends: (BaseUser) -> { Friend },
 	getPresence: (BaseUser) -> Presence,
-	getUsernameHistory: (BaseUser, limit: number) -> PageIterator<string>
+	getUsernameHistory: (BaseUser, limit: number) -> PageIterator<string>,
 }
-
 export type PartialUser = BaseUser & {
 	name: string,
 	displayName: string,
 	hasVerifiedBadge: boolean,
 }
-
 export type User = PartialUser & {
 	description: string,
 }
-
 export type AuthenticatedUser = BaseUser & {
 	name: string,
 	displayName: string,
-	
+
 	getBirthdate: (AuthenticatedUser) -> UserBirthdate,
 	getGender: (AuthenticatedUser) -> number,
 	getAgeBracket: (AuthenticatedUser) -> number,
 	getCountryCode: (AuthenticatedUser) -> string,
 	getRobux: (AuthenticatedUser) -> number,
 }
-
 export type UsersProvider = {
 	getBaseUser: (UsersProvider, userId: number) -> BaseUser,
 	getUser: (UsersProvider, userId: number) -> User,
@@ -66,15 +62,20 @@ export type UsersProvider = {
 	getUserFromUsername: (UsersProvider, username: string) -> PartialUser?,
 	getUsersFromUsernames: (UsersProvider, usernames: { string }) -> { PartialUser },
 	getUsersFromIds: (UsersProvider, userIds: { number }) -> { PartialUser },
-	searchUsersWithKeyword: (UsersProvider, keyword: string, limit: number, sessionId: string?) -> PageIterator<PartialUser>,
-	
+	searchUsersWithKeyword: (
+		UsersProvider,
+		keyword: string,
+		limit: number,
+		sessionId: string?
+	) -> PageIterator<PartialUser>,
+
 	getUserUsernameHistory: (UsersProvider, userId: number, limit: number) -> PageIterator<string>,
-	
+
 	_getAuthenticatedGender: (UsersProvider) -> number,
 	_getAuthenticatedBirthdate: (UsersProvider) -> UserBirthdate,
 	_getAuthenticatedAgeBracket: (UsersProvider) -> number,
 	_getAuthenticatedCountryCode: (UsersProvider) -> string,
-	_getAuthenticatedRobux: (UsersProvider) -> number
+	_getAuthenticatedRobux: (UsersProvider) -> number,
 }
 
 -- Friends
@@ -83,9 +84,8 @@ export type Friend = BaseUser & {
 	name: string,
 	displayName: string,
 }
-
 export type FriendsProvider = {
-	getUserFriends: (FriendsProvider, userId: number) -> { Friend }
+	getUserFriends: (FriendsProvider, userId: number) -> { Friend },
 }
 
 -- Presence
@@ -102,7 +102,6 @@ export type Presence = {
 	getGameLink: (Presence) -> string,
 	getJoinLink: (Presence) -> string,
 }
-
 export type PresenceProvider = {
 	getUserPresences: (PresenceProvider, users: { number }) -> { Presence },
 }
@@ -138,7 +137,6 @@ export type Thumbnail = {
 	version: string,
 	state: string,
 }
-
 export type ThumbnailProvider = {
 	getUserThumbnails: (
 		ThumbnailProvider,
@@ -184,7 +182,6 @@ export type BasePlace = {
 	getLink: (BasePlace) -> string,
 	getInstances: <P>(P, limit: number, excludeFull: boolean?) -> PageIterator<GameInstance<P>>,
 }
-
 export type Place = BasePlace & {
 	builder: string,
 	builderId: number,
@@ -201,7 +198,6 @@ export type Place = BasePlace & {
 	reasonProhibited: string,
 	imageToken: string,
 }
-
 export type PlacesProvider = {
 	getBasePlace: (PlacesProvider, placeId: number) -> BasePlace,
 
