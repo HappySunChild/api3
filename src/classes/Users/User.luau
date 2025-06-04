@@ -11,6 +11,7 @@ type data = {
 	name: string,
 	displayName: string,
 	description: string,
+	hasVerifiedBadge: boolean,
 }
 
 return createClass {
