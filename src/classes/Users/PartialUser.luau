@@ -7,18 +7,20 @@ local BaseUser = require "./BaseUser"
 
 type Self = types.PartialUser
 type data = {
-	id: number,
-	name: string,
+	id: number?,
+	userId: number?,
+	name: string?,
+	username: string?,
 	displayName: string,
 	hasVerifiedBadge: boolean,
 }
 
 return createClass {
 	super = function(client: types.Client, data: data)
-		return BaseUser(client, data.id)
+		return BaseUser(client, data.id or data.userId or -1)
 	end,
 	constructor = function(self: Self, _, data: data)
-		self.name = data.name
+		self.name = data.name or data.username or "!UNKNOWN"
 		self.displayName = data.displayName
 		self.hasVerifiedBadge = data.hasVerifiedBadge
 	end,
