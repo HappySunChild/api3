@@ -53,7 +53,7 @@ return createClass {
 	},
 	metatable = table.freeze {
 		__tostring = function(self: Self)
-			return tint(`<GameInstance {self.jobId}>`, "purple")
+			return tint(`<GameInstance {self.jobId}>`, "yellow")
 		end,
 	},
 } :: (data: data, place: types.BasePlace) -> types.GameInstance
