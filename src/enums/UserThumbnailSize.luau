@@ -1,4 +1,6 @@
-return {
+local createEnum = require "./createEnum"
+
+return createEnum {
 	x48 = "48x48",
 	x50 = "50x50",
 	x60 = "60x60",

@@ -1,4 +1,6 @@
-return {
+local createEnum = require "./createEnum"
+
+return createEnum {
 	Avatar = "Avatar",
 	AvatarBust = "AvatarBust",
 	AvatarHeadshot = "AvatarHeadShot",

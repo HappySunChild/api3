@@ -1,4 +1,6 @@
-return {
+local createEnum = require "./createEnum"
+
+return createEnum {
 	DeletePost = "DeletePost",
 	RemoveMember = "RemoveMember",
 	AcceptJoinRequest = "AcceptJoinRequest",
