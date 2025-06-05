@@ -177,5 +177,11 @@ return createClass {
 				end,
 			})
 		end,
+		getUserPrimaryGroup = function(self: Self, userId: number)
+			local client = self._client
+			local info = client._fetcher:get(getUrl("groups", `v1/users/{userId}/groups/primary/role`))
+
+			return Group(client, info.group)
+		end,
 	},
 } :: (client: types.Client) -> types.GroupsProvider

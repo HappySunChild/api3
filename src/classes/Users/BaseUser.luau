@@ -25,6 +25,9 @@ return createClass {
 		getUsernameHistory = function(self: Self, limit: number)
 			return self._client.users:getUserUsernameHistory(self.id, limit)
 		end,
+		getPrimaryGroup = function(self: Self)
+			return self._client.groups:getUserPrimaryGroup(self.id)
+		end,
 	},
 	metatable = table.freeze {
 		__tostring = function(self: Self)
