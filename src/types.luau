@@ -33,14 +33,14 @@ export type BaseUser = {
 	id: number,
 
 	getLink: (BaseUser) -> string,
-	getFriends: (BaseUser) -> { Friend },
+	getFriends: (BaseUser) -> { PartialUser },
 	getPresence: (BaseUser) -> Presence,
 	getUsernameHistory: (BaseUser, limit: number) -> PageIterator<string>,
 }
 export type PartialUser = BaseUser & {
 	name: string,
 	displayName: string,
-	hasVerifiedBadge: boolean,
+	hasVerifiedBadge: boolean?,
 }
 export type User = PartialUser & {
 	description: string,
@@ -80,12 +80,8 @@ export type UsersProvider = {
 
 -- Friends
 
-export type Friend = BaseUser & {
-	name: string,
-	displayName: string,
-}
 export type FriendsProvider = {
-	getUserFriends: (FriendsProvider, userId: number) -> { Friend },
+	getUserFriends: (FriendsProvider, userId: number) -> { PartialUser },
 }
 
 -- Presence

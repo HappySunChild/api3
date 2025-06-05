@@ -16,7 +16,7 @@ return createClass {
 		getLink = function(self: Self): string
 			return `https://www.roblox.com/users/{self.id}/profile`
 		end,
-		getFriends = function(self: Self): { types.Friend }
+		getFriends = function(self: Self): { types.PartialUser }
 			return self._client.friends:getUserFriends(self.id)
 		end,
 		getPresence = function(self: Self): types.Presence
