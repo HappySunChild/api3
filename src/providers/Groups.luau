@@ -183,5 +183,17 @@ return createClass {
 
 			return Group(client, info.group)
 		end,
+		getUserGroups = function(self: Self, userId: number)
+			local client = self._client
+			local groupsInfo = client._fetcher:get(getUrl("groups", `v1/users/{userId}/groups/roles`))
+
+			local groups = {}
+
+			for _, info in groupsInfo.data do
+				table.insert(groups, Group(client, info.group))
+			end
+
+			return groups
+		end,
 	},
 } :: (client: types.Client) -> types.GroupsProvider

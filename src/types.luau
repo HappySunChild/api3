@@ -37,6 +37,7 @@ export type BaseUser = {
 	getPresence: (BaseUser) -> Presence,
 	getUsernameHistory: (BaseUser, limit: number) -> PageIterator<string>,
 	getPrimaryGroup: (BaseUser) -> Group,
+	getGroups: (BaseUser) -> { Group },
 }
 export type PartialUser = BaseUser & {
 	name: string,
@@ -322,6 +323,7 @@ export type GroupsProvider = {
 	-- misc
 	getNameHistory: (GroupsProvider, groupId: number, limit: number) -> PageIterator<string>,
 	getUserPrimaryGroup: (GroupsProvider, userId: number) -> Group,
+	getUserGroups: (GroupsProvider, userId: number) -> { Group },
 }
 
 -- Client

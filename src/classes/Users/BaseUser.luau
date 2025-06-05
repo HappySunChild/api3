@@ -28,6 +28,9 @@ return createClass {
 		getPrimaryGroup = function(self: Self)
 			return self._client.groups:getUserPrimaryGroup(self.id)
 		end,
+		getGroups = function(self: Self)
+			return self._client.groups:getUserGroups(self.id)
+		end,
 	},
 	metatable = table.freeze {
 		__tostring = function(self: Self)
