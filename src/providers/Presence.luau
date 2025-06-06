@@ -3,7 +3,7 @@ local types = require "@package/types"
 local createClass = require "@utility/createClass"
 local getUrl = require "@utility/network/getUrl"
 
-local Presence = require "@classes/Presence"
+local Presence = require "@classes/Presence/Presence"
 
 type Self = types.PresenceProvider & {
 	_client: types.Client,
