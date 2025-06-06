@@ -29,25 +29,25 @@ type UserBirthdate = {
 	birthYear: number,
 }
 
-export type BaseUser = {
+export type User = {
 	id: number,
 
-	getLink: (BaseUser) -> string,
-	getFriends: (BaseUser) -> { PartialUser },
-	getPresence: (BaseUser) -> Presence,
-	getUsernameHistory: (BaseUser, limit: number) -> PageIterator<string>,
-	getPrimaryGroup: (BaseUser) -> Group,
-	getGroups: (BaseUser) -> { Group },
+	getLink: (User) -> string,
+	getFriends: (User) -> { PartialUser },
+	getPresence: (User) -> Presence,
+	getUsernameHistory: (User, limit: number) -> PageIterator<string>,
+	getPrimaryGroup: (User) -> DetailedGroup,
+	getGroups: (User) -> { DetailedGroup },
 }
-export type PartialUser = BaseUser & {
+export type PartialUser = User & {
 	name: string,
 	displayName: string,
 	hasVerifiedBadge: boolean?,
 }
-export type User = PartialUser & {
+export type DetailedUser = PartialUser & {
 	description: string,
 }
-export type AuthenticatedUser = BaseUser & {
+export type AuthenticatedUser = User & {
 	name: string,
 	displayName: string,
 
@@ -58,8 +58,8 @@ export type AuthenticatedUser = BaseUser & {
 	getRobux: (AuthenticatedUser) -> number,
 }
 export type UsersProvider = {
-	getBaseUser: (UsersProvider, userId: number) -> BaseUser,
 	getUser: (UsersProvider, userId: number) -> User,
+	getDetailedUser: (UsersProvider, userId: number) -> DetailedUser,
 	getAuthenticatedUser: (UsersProvider) -> AuthenticatedUser,
 	getUserFromUsername: (UsersProvider, username: string) -> PartialUser?,
 	getUsersFromUsernames: (UsersProvider, usernames: { string }) -> { PartialUser },
@@ -151,7 +151,7 @@ export type ThumbnailProvider = {
 
 -- Places
 
-export type GameInstance<P = BasePlace> = {
+export type GameInstance<P = Place> = {
 	place: P,
 
 	jobId: string,
@@ -174,13 +174,13 @@ export type GameInstance<P = BasePlace> = {
 	getJoinLink: (GameInstance) -> string,
 }
 
-export type BasePlace = {
+export type Place = {
 	id: number,
 
-	getLink: (BasePlace) -> string,
+	getLink: (Place) -> string,
 	getInstances: <P>(P, limit: number, excludeFull: boolean?) -> PageIterator<GameInstance<P>>,
 }
-export type Place = BasePlace & {
+export type DetailedPlace = Place & {
 	builder: string,
 	builderId: number,
 	hasVerifiedBadge: boolean,
@@ -197,10 +197,10 @@ export type Place = BasePlace & {
 	imageToken: string,
 }
 export type PlacesProvider = {
-	getBasePlace: (PlacesProvider, placeId: number) -> BasePlace,
-
 	getPlace: (PlacesProvider, placeId: number) -> Place,
-	getPlaces: (PlacesProvider, placeIds: { number }) -> { Place },
+
+	getDetailedPlace: (PlacesProvider, placeId: number) -> DetailedPlace,
+	getPlaces: (PlacesProvider, placeIds: { number }) -> { DetailedPlace },
 }
 
 -- Groups
@@ -253,33 +253,33 @@ type GroupSettings = {
 	isGroupNameChangeEnabled: boolean,
 }
 
-export type BaseGroup = {
+export type Group = {
 	id: number,
 
-	getRoles: (BaseGroup) -> { GroupRole },
-	getMembers: (BaseGroup, limit: number) -> PageIterator<GroupMember>,
-	getMembersWithRole: (BaseGroup, roleId: number, limit: number) -> PageIterator<PartialUser>,
+	getRoles: (Group) -> { GroupRole },
+	getMembers: (Group, limit: number) -> PageIterator<GroupMember>,
+	getMembersWithRole: (Group, roleId: number, limit: number) -> PageIterator<PartialUser>,
 
-	getRelationships: (BaseGroup, relationshipType: GroupRelationshipType, limit: number) -> { Group },
-	getSocialLinks: (BaseGroup) -> { SocialLink },
+	getRelationships: (Group, relationshipType: GroupRelationshipType, limit: number) -> { DetailedGroup },
+	getSocialLinks: (Group) -> { SocialLink },
 
-	getGroupWall: (BaseGroup, limit: number) -> PageIterator<GroupMessage>,
+	getGroupWall: (Group, limit: number) -> PageIterator<GroupMessage>,
 
 	getAuditLog: (
-		BaseGroup,
+		Group,
 		actionType: GroupActionType,
 		limit: number,
 		userId: number?
 	) -> PageIterator<GroupAuditLog>,
-	getSettings: (BaseGroup) -> GroupSettings,
-	getJoinRequestWithUserId: (BaseGroup, userId: number) -> GroupJoinRequest,
-	getJoinRequests: (BaseGroup, limit: number) -> PageIterator<GroupJoinRequest>,
-	getPayoutRestrictions: (BaseGroup) -> GroupPayoutRestrictions,
-	getPayouts: (BaseGroup) -> { GroupPayout },
+	getSettings: (Group) -> GroupSettings,
+	getJoinRequestWithUserId: (Group, userId: number) -> GroupJoinRequest,
+	getJoinRequests: (Group, limit: number) -> PageIterator<GroupJoinRequest>,
+	getPayoutRestrictions: (Group) -> GroupPayoutRestrictions,
+	getPayouts: (Group) -> { GroupPayout },
 
-	getNameHistory: (BaseGroup, limit: number) -> PageIterator<string>,
+	getNameHistory: (Group, limit: number) -> PageIterator<string>,
 }
-export type Group = BaseGroup & {
+export type DetailedGroup = Group & {
 	name: string,
 	description: string,
 	memberCount: number,
@@ -291,8 +291,8 @@ export type Group = BaseGroup & {
 	shout: GroupMessage?,
 }
 export type GroupsProvider = {
-	getBaseGroup: (GroupsProvider, groupId: number) -> BaseGroup,
 	getGroup: (GroupsProvider, groupId: number) -> Group,
+	getDetailedGroup: (GroupsProvider, groupId: number) -> DetailedGroup,
 	-- user/roles
 	getRoles: (GroupsProvider, groupId: number) -> { GroupRole },
 	getMembers: (GroupsProvider, groupId: number, limit: number) -> PageIterator<GroupMember>,
@@ -303,7 +303,7 @@ export type GroupsProvider = {
 		groupId: number,
 		relationType: GroupRelationshipType,
 		limit: number
-	) -> { Group },
+	) -> { DetailedGroup },
 	getSocialLinks: (GroupsProvider, groupId: number) -> { SocialLink },
 	-- group wall
 	getGroupWall: (GroupsProvider, groupId: number, limit: number) -> PageIterator<GroupMessage>,
@@ -322,8 +322,8 @@ export type GroupsProvider = {
 	getPayouts: (GroupsProvider, groupId: number) -> { GroupPayout },
 	-- misc
 	getNameHistory: (GroupsProvider, groupId: number, limit: number) -> PageIterator<string>,
-	getUserPrimaryGroup: (GroupsProvider, userId: number) -> Group,
-	getUserGroups: (GroupsProvider, userId: number) -> { Group },
+	getUserPrimaryGroup: (GroupsProvider, userId: number) -> DetailedGroup,
+	getUserGroups: (GroupsProvider, userId: number) -> { DetailedGroup },
 }
 
 -- Client
@@ -342,15 +342,15 @@ export type Client = {
 
 	setToken: (Client, token: string) -> (),
 
-	getBaseUser: (Client, userId: number) -> BaseUser,
 	getUser: (Client, userId: number) -> User,
+	getDetailedUser: (Client, userId: number) -> DetailedUser,
 	getAuthenticatedUser: (Client) -> AuthenticatedUser,
 
-	getBasePlace: (Client, placeId: number) -> BasePlace,
 	getPlace: (Client, placeId: number) -> Place,
+	getDetailedPlace: (Client, placeId: number) -> DetailedPlace,
 
-	getBaseGroup: (Client, groupId: number) -> BaseGroup,
 	getGroup: (Client, groupId: number) -> Group,
+	getDetailedGroup: (Client, groupId: number) -> DetailedGroup,
 }
 
 return nil

@@ -1,50 +1,45 @@
 local types = require "@package/types"
 
+local GameInstance = require "./GameInstance"
+
+local PageIterator = require "@utility/network/PageIterator"
 local createClass = require "@utility/createClass"
+local getUrl = require "@utility/network/getUrl"
 local tint = require "@utility/tint"
 
-local BasePlace = require "./BasePlace"
-
-type Self = types.Place
-type data = {
-	builder: string,
-	builderId: number,
-	hasVerifiedBadge: boolean,
-	placeId: number,
-	universeId: number,
-	universeRootPlaceId: number,
-	name: string,
-	sourceName: string,
-	description: string,
-	sourceDescription: string,
-	price: number,
-	isPlayable: boolean,
-	reasonProhibited: string,
-	imageToken: string,
+type Self = types.Place & {
+	_client: types.Client,
 }
 
 return createClass {
-	super = function(client: types.Client, data: data)
-		return BasePlace(client, data.placeId)
+	constructor = function(self: Self, client: types.Client, placeId: number)
+		self._client = client
+		self.id = placeId
 	end,
-	constructor = function(self: Self, client: types.Client, data: data)
-		self.builder = data.builder
-		self.builderId = data.builderId
-		self.hasVerifiedBadge = data.hasVerifiedBadge
-		self.universeId = data.universeId
-		self.universeRootPlaceId = data.universeRootPlaceId
-		self.name = data.name
-		self.sourceName = data.sourceName
-		self.description = data.description
-		self.sourceDescription = data.sourceDescription
-		self.price = data.price
-		self.isPlayable = data.isPlayable
-		self.reasonProhibited = data.reasonProhibited
-		self.imageToken = data.reasonProhibited
-	end,
-	metatable = table.freeze {
-		__tostring = function(self: Self)
-			return tint(`<Place {self.id}, {self.name}>`, "purple")
+	attributes = {
+		getInstances = function(
+			self: Self,
+			limit: number,
+			excludeFull: boolean?
+		): types.PageIterator<types.GameInstance>
+			return PageIterator(self._client._fetcher, {
+				url = getUrl("games", `v1/games/{self.id}/servers/0`),
+				limit = limit,
+				query = {
+					excludeFullGames = excludeFull,
+				},
+				map = function(data: any)
+					return GameInstance(data, self)
+				end,
+			}) :: any
+		end,
+		getLink = function(self: Self): string
+			return `https://www.roblox.com/games/{self.id}/`
 		end,
 	},
-} :: (client: types.Client, data: data) -> types.Place
+	metatable = table.freeze {
+		__tostring = function(self: Self)
+			return tint(`<Place {self.id}>`, "purple")
+		end,
+	},
+} :: (client: types.Client, placeId: number) -> types.Place

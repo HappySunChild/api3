@@ -3,7 +3,7 @@ local types = require "@package/types"
 local createClass = require "@utility/createClass"
 local tint = require "@utility/tint"
 
-local BaseUser = require "./BaseUser"
+local User = require "./User"
 
 type Self = types.PartialUser
 type data = {
@@ -17,7 +17,7 @@ type data = {
 
 return createClass {
 	super = function(client: types.Client, data: data)
-		return BaseUser(client, data.id or data.userId or -1)
+		return User(client, data.id or data.userId or -1)
 	end,
 	constructor = function(self: Self, _, data: data)
 		self.name = data.name or data.username or "!UNKNOWN"

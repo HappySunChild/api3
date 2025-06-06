@@ -31,26 +31,26 @@ return createClass {
 			self.token = token
 			self._fetcher:setHeader("Cookie", token)
 		end,
-		getBaseUser = function(self: Self, userId: number): types.BaseUser
-			return self.users:getBaseUser(userId)
-		end,
 		getUser = function(self: Self, userId: number): types.User
 			return self.users:getUser(userId)
+		end,
+		getDetailedUser = function(self: Self, userId: number): types.DetailedUser
+			return self.users:getDetailedUser(userId)
 		end,
 		getAuthenticatedUser = function(self: Self): types.AuthenticatedUser
 			return self.users:getAuthenticatedUser()
 		end,
-		getBasePlace = function(self: Self, placeId: number): types.BasePlace
-			return self.places:getBasePlace(placeId)
-		end,
 		getPlace = function(self: Self, placeId: number): types.Place
 			return self.places:getPlace(placeId)
 		end,
-		getBaseGroup = function(self: Self, groupId: number): types.BaseGroup
-			return self.groups:getBaseGroup(groupId)
+		getDetailedPlace = function(self: Self, placeId: number): types.DetailedPlace
+			return self.places:getDetailedPlace(placeId)
 		end,
 		getGroup = function(self: Self, groupId: number): types.Group
 			return self.groups:getGroup(groupId)
+		end,
+		getDetailedGroup = function(self: Self, groupId: number): types.DetailedGroup
+			return self.groups:getDetailedGroup(groupId)
 		end,
 	},
 	metatable = table.freeze {

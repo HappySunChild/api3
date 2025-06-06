@@ -5,7 +5,7 @@ local getUrl = require "@utility/network/getUrl"
 
 local PageIterator = require "@utility/network/PageIterator"
 
-local BaseGroup = require "@classes/Groups/BaseGroup"
+local DetailedGroup = require "@classes/Groups/DetailedGroup"
 local Group = require "@classes/Groups/Group"
 
 local GroupAuditLog = require "@classes/Groups/GroupAuditLog"
@@ -27,14 +27,14 @@ return createClass {
 		self._client = client
 	end,
 	attributes = {
-		getBaseGroup = function(self: Self, groupId: number)
-			return BaseGroup(self._client, groupId)
-		end,
 		getGroup = function(self: Self, groupId: number)
+			return Group(self._client, groupId)
+		end,
+		getDetailedGroup = function(self: Self, groupId: number)
 			local client = self._client
 			local groupData = client._fetcher:get(getUrl("groups", `v1/groups/{groupId}`))
 
-			return Group(client, groupData)
+			return DetailedGroup(client, groupData)
 		end,
 		-- user/roles
 		getRoles = function(self: Self, groupId: number)
@@ -84,7 +84,7 @@ return createClass {
 			local groups = {}
 
 			for _, data in relationshipData.relatedGroups do
-				table.insert(groups, Group(client, data))
+				table.insert(groups, DetailedGroup(client, data))
 			end
 
 			return groups
@@ -181,7 +181,7 @@ return createClass {
 			local client = self._client
 			local info = client._fetcher:get(getUrl("groups", `v1/users/{userId}/groups/primary/role`))
 
-			return Group(client, info.group)
+			return DetailedGroup(client, info.group)
 		end,
 		getUserGroups = function(self: Self, userId: number)
 			local client = self._client
@@ -190,7 +190,7 @@ return createClass {
 			local groups = {}
 
 			for _, info in groupsInfo.data do
-				table.insert(groups, Group(client, info.group))
+				table.insert(groups, DetailedGroup(client, info.group))
 			end
 
 			return groups

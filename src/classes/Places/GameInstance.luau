@@ -19,7 +19,7 @@ type data = {
 }
 
 return createClass {
-	constructor = function(self: Self, data: data, place: types.Place)
+	constructor = function(self: Self, data: data, place: types.DetailedPlace)
 		self.place = place
 
 		self.jobId = data.id
@@ -56,4 +56,4 @@ return createClass {
 			return tint(`<GameInstance {self.jobId}>`, "yellow")
 		end,
 	},
-} :: (data: data, place: types.BasePlace) -> types.GameInstance
+} :: (data: data, place: types.Place) -> types.GameInstance

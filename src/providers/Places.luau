@@ -3,7 +3,7 @@ local types = require "@package/types"
 local createClass = require "@utility/createClass"
 local getUrl = require "@utility/network/getUrl"
 
-local BasePlace = require "@classes/Places/BasePlace"
+local DetailedPlace = require "@classes/Places/DetailedPlace"
 local Place = require "@classes/Places/Place"
 
 type Self = { _client: types.Client } & types.PlacesProvider
@@ -13,13 +13,13 @@ return createClass {
 		self._client = client
 	end,
 	attributes = {
-		getBasePlace = function(self: Self, placeId: number): types.BasePlace
-			return BasePlace(self._client, placeId)
-		end,
 		getPlace = function(self: Self, placeId: number): types.Place
+			return Place(self._client, placeId)
+		end,
+		getDetailedPlace = function(self: Self, placeId: number): types.DetailedPlace
 			return self:getPlaces({ placeId })[1]
 		end,
-		getPlaces = function(self: Self, placeIds: { number }): { types.Place }
+		getPlaces = function(self: Self, placeIds: { number }): { types.DetailedPlace }
 			local client = self._client
 			local placesData =
 				client._fetcher:get(getUrl("games", "v1/games/multiget-place-details"), { placeIds = placeIds })
@@ -27,7 +27,7 @@ return createClass {
 			local places = {}
 
 			for _, data in placesData do
-				table.insert(places, Place(client, data))
+				table.insert(places, DetailedPlace(client, data))
 			end
 
 			return places

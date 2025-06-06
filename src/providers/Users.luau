@@ -6,7 +6,7 @@ local PageIterator = require "@utility/network/PageIterator"
 local getUrl = require "@utility/network/getUrl"
 
 local AuthenticatedUser = require "@classes/Users/AuthenticatedUser"
-local BaseUser = require "@classes/Users/BaseUser"
+local DetailedUser = require "@classes/Users/DetailedUser"
 local PartialUser = require "@classes/Users/PartialUser"
 local User = require "@classes/Users/User"
 
@@ -20,14 +20,14 @@ return createClass {
 	end,
 	attributes = {
 		-- constructors
-		getBaseUser = function(self: Self, userId: number)
-			return BaseUser(self._client, userId)
-		end,
 		getUser = function(self: Self, userId: number)
+			return User(self._client, userId)
+		end,
+		getDetailedUser = function(self: Self, userId: number)
 			local client = self._client
 			local userData = client._fetcher:get(getUrl("users", `v1/users/{userId}`)) -- `https://users.roblox.com/v1/users/{userId}`
 
-			return User(client, userData)
+			return DetailedUser(client, userData)
 		end,
 		getAuthenticatedUser = function(self: Self)
 			local client = self._client
