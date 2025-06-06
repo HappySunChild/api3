@@ -7,7 +7,6 @@ export type Place = types.Place
 export type Presence = types.Presence
 export type BaseUser = types.BaseUser
 export type User = types.User
-export type Friend = types.Friend
 
 export type Thumbnail = types.Thumbnail
 export type ThumbnailBatchRequest = types.ThumbnailBatchRequest
