@@ -14,8 +14,8 @@ export type ThumbnailBatchRequest = types.ThumbnailBatchRequest
 export type Client = types.Client
 
 return table.freeze {
-	Client = require "@classes/Client",
+	Client = require "@self/classes/Client",
 	Enums = require "@self/enums",
 
-	castToId = require "@utility/castToId",
+	castToId = require "@self/utility/castToId",
 }
